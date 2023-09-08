@@ -400,7 +400,7 @@ rack_attack:
     # findtime: 60
     # bantime: 3600
 trusted_proxies: []
-#resources:
+resources: {}
 #  limits:
 #    cpu: 100m
 #    memory: 512Mi
