@@ -1,0 +1,72 @@
+{{- $configmapParent := include "netdata.parent.configs.configmap" . }}
+{{- if and .Values.parent.enabled $configmapParent }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: netdata-conf-parent
+  labels:
+    app: {{ template "netdata.name" . }}
+    chart: {{ template "netdata.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  {{ $configmapParent | indent 2 }}
+{{- end }}
+
+{{- $configmapChild := include "netdata.child.configs.configmap" . }}
+{{- if and .Values.child.enabled $configmapChild}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: netdata-conf-child
+  labels:
+    app: {{ template "netdata.name" . }}
+    chart: {{ template "netdata.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  {{ $configmapChild | indent 2 }}
+{{- end }}
+
+{{- $configmapk8sState := include "netdata.k8sState.configs.configmap" . }}
+{{- if and .Values.k8sState.enabled $configmapk8sState }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: netdata-conf-k8s-state
+  labels:
+    app: {{ template "netdata.name" . }}
+    chart: {{ template "netdata.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  {{ $configmapk8sState | indent 2 }}
+{{- end }}
+
+
+{{- if and .Values.child.enabled .Values.sd.child.enabled .Values.sd.child.configmap.from }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.sd.child.configmap.name }}
+  labels:
+    app: {{ template "netdata.name" . }}
+    chart: {{ template "netdata.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  {{ .Values.sd.child.configmap.key }}: |
+    {{- with .Values.sd.child.configmap.from }}
+      {{- if and (.value) (kindIs "string" .value) }}
+        {{- .value | nindent 4 }}
+      {{- else if .value }}
+        {{- toYaml .value | nindent 4 }}
+      {{- else }}
+        {{- $.Files.Get .file | nindent 4 }}
+      {{- end}}
+    {{- end}}
+{{- end }}
