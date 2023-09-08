@@ -400,13 +400,13 @@ rack_attack:
     # findtime: 60
     # bantime: 3600
 trusted_proxies: []
-resources:
-  limits:
-    cpu: 100m
-    memory: 512Mi
-  requests:
-    cpu: 100m
-    memory: 512Mi
+#resources:
+#  limits:
+#    cpu: 100m
+#    memory: 512Mi
+#  requests:
+#    cpu: 100m
+#    memory: 512Mi
 maxUnavailable: 0
 minReplicas: 1
 maxReplicas: 1

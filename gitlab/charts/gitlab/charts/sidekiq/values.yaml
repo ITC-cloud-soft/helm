@@ -286,11 +286,11 @@ keda:
 
 timeout: 25
 resources:
-  # limits:
-  #  memory: 5G
+  limits:
+    memory: 512M
   requests:
-    cpu: 900m
-    memory: 2G
+    cpu: 500m
+    memory: 256M
 maxUnavailable: 1
 
 # Define queue groups into Pods
